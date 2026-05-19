@@ -17,7 +17,8 @@ public class WebSecurity {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		this.userDetailsService = userSer
+		this.userDetailsService = userService;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
 	@Bean
@@ -34,6 +35,8 @@ public class WebSecurity {
 	http.csrf().disable()
 	.authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll()
 	.anyRequest().authenticated();
+	
+	return http.build();
 	
 }
 	
