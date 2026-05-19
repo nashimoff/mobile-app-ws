@@ -20,7 +20,7 @@ public class UserController {
 	@PostMapping
 	public String createUser()
 	{
-		return "create user was called";  //nurlan ashimoffsafdadf
+		return "create user was called";  //nurlanbey
 	}
 	
 	@PutMapping
