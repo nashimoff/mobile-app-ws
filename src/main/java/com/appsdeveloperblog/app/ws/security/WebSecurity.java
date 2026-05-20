@@ -1,7 +1,5 @@
 package com.appsdeveloperblog.app.ws.security;
 
-import static org.assertj.core.api.Assertions.filter;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
