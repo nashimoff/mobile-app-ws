@@ -28,8 +28,13 @@ public class MobileAppWsApplication extends SpringBootServletInitializer {
 	public SpringApplicationContext springApplicationContext() {
 		return new SpringApplicationContext();
 	}
+	
+//	@Bean(name="AppProperties")
+//	public AppProperties getAppProperties()
+//	{
+//		return new AppProperties();
+//	}
 
 }
 
 
-// ashimov
