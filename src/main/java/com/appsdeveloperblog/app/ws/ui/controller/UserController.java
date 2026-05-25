@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.appsdeveloperblog.app.ws.service.UserService;
+import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
 import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
 import com.appsdeveloperblog.app.ws.ui.model.request.UserDetailsRequestModel;
+import com.appsdeveloperblog.app.ws.ui.model.response.AddressesRest;
 import com.appsdeveloperblog.app.ws.ui.model.response.OperationStatusModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.RequestOperationStatus;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
@@ -38,7 +41,9 @@ public class UserController {
 		UserRest returnValue = new UserRest();
 		
 		UserDto userDto = userService.getUserByUserId(id);
-		BeanUtils.copyProperties(userDto, returnValue);
+		ModelMapper modelMapper = new ModelMapper();
+		returnValue = modelMapper.map(userDto, UserRest.class);
+//		BeanUtils.copyProperties(userDto, returnValue);
 		
 		return returnValue;
 	}
@@ -49,7 +54,6 @@ public class UserController {
 	public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception
 	{
 		UserRest returnValue = new UserRest();
-		
 //		UserDto userDto = new UserDto();
 //		BeanUtils.copyProperties(userDetails,userDto);
 		
@@ -109,5 +113,22 @@ public class UserController {
 		return returnValue;
 	}
 	
+	// http://localhost:8080/mobile-app-ws/users/asfasdfasdfas/addresses
+	@GetMapping(path="/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE, 
+			MediaType.APPLICATION_JSON_VALUE})
+	public List<AddressesRest> getUserAddresses(@PathVariable String id)
+	{
+		List<AddressesRest> returnValue = new ArrayList<>();
+		
+		List<AddressDTO> addressesDTO = addressesService.getAddresses(id);
+		
+		if (addressesDTO != null && !addressesDTO.isEmpty())
+		{
+		   java.lang.reflect.Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
+		   returnValue = new ModelMapper().map(addressesDTO, listType);
+		}
+		
+		return returnValue;
+	}
 
 }
