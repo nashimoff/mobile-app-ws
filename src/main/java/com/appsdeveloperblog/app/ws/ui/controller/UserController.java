@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.appsdeveloperblog.app.ws.service.AddressService;
 import com.appsdeveloperblog.app.ws.service.UserService;
 import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
 import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
@@ -33,6 +34,12 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	AddressService addressService;
+	
+	@Autowired
+	AddressService addressesService;
 	
 	@GetMapping(path="/{id}", produces = { MediaType.APPLICATION_XML_VALUE, 
 			MediaType.APPLICATION_JSON_VALUE})
@@ -129,6 +136,17 @@ public class UserController {
 		}
 		
 		return returnValue;
+	}
+	
+	@GetMapping(path="/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE})
+	public AddressesRest geUserAddress(@PathVariable String addressId) {
+		
+		AddressDTO addressDto = addressService.getAddress(addressId);
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		return modelMapper.map(addressDto, AddressesRest.class);
 	}
 
 }
