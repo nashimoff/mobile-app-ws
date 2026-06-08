@@ -47,6 +47,7 @@ public class WebSecurity {
 	.permitAll()
 	.antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
 	.permitAll()
+//	.antMatchers("/error").permitAll()  // ← bunu ekle
 	.anyRequest().authenticated()
 	.and()
 	.authenticationManager(authenticationManager)
