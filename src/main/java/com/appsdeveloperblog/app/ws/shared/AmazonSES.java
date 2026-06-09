@@ -15,7 +15,7 @@ import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
  
 @Service
 public class AmazonSES {
-	// This address must be verified with Amazon SES.
+	// This address must be verified  with Amazon SES.
 	final String FROM = "sergey.kargopolov@swiftdeveloperblog.com";
 
 	// The subject line for the email.
