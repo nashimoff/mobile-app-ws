@@ -1,22 +1,16 @@
 package com.appsdeveloperblog.app.ws.shared;
-
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Random;
-
 import javax.crypto.SecretKey;
-
 import org.springframework.stereotype.Component;
-
 import com.appsdeveloperblog.app.ws.security.SecurityConstants;
-
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-public class Utils {
+public class Utils3 {
 	
 	private final Random RANDOM = new SecureRandom();
 	private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -38,27 +32,17 @@ public class Utils {
 	}
 	
 	public static boolean hasTokenExpired(String token) {
-		try {
-			SecretKey key = Keys.hmacShaKeyFor(SecurityConstants.getTokenSecret().getBytes());
-			
-			Claims claims = Jwts.parserBuilder()
-					.setSigningKey(key)
-					.build()
-					.parseClaimsJws(token)
-					.getBody();
-			
-			Date tokenExpirationDate = claims.getExpiration();
-			Date todayDate = new Date();
-			
-			return tokenExpirationDate.before(todayDate);
-			
-		} catch (ExpiredJwtException ex) {
-			System.out.println(">>> TOKEN EXPIRED: " + ex.getMessage());
-			return true;
-		} catch (Exception ex) {
-			System.out.println(">>> TOKEN HATASI: " + ex.getMessage());
-			return true;
-		}
+		SecretKey key = Keys.hmacShaKeyFor(SecurityConstants.getTokenSecret().getBytes());
+		
+		Claims claims = Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token).getBody();
+		
+		Date tokenExpirationDate = claims.getExpiration();
+		Date todayDate = new Date();
+		
+		return tokenExpirationDate.before(todayDate);
 	}
 	
 	public String generateEmailVerificationToken(String userId) {

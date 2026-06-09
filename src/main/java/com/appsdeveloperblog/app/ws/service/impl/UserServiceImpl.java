@@ -1,7 +1,6 @@
 package com.appsdeveloperblog.app.ws.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,8 +49,7 @@ public class UserServiceImpl implements UserService {
 			user.getAddresses().set(i, address);
 		}
 		
-//		BeanUtils.copyProperties(user, userEntity);
-		ModelMapper  modelMapper = new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 		
 		String publicUserId = utils.generateUserId(30);
@@ -63,20 +60,10 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity storedUserDetails = userRepository.save(userEntity);
 		
-//		BeanUtils.copyProperties(storedUserDetails, returnValue);
 		UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 		
 		return returnValue;
 	}
-
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//		UserEntity userEntity = userRepository.findByEmail(username);
-//		
-//		if(userEntity == null) throw new UsernameNotFoundException(username);
-//		
-//		return new User(username, userEntity.getEncryptedPassword(), new ArrayList<>());
-//	}
 
 	@Override
 	public UserDto getUser(String email) {
@@ -89,7 +76,6 @@ public class UserServiceImpl implements UserService {
 		return returnValue;
 	}
 	
-	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		UserEntity userEntity = userRepository.findByEmail(email);
@@ -98,10 +84,8 @@ public class UserServiceImpl implements UserService {
 		
 		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), 
 				userEntity.getEmailVerificationStatus(), 
-				true,true, 
+				true, true, 
 				true, new ArrayList<>());
-		
-//		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 	}
 
 	@Override
@@ -164,11 +148,14 @@ public class UserServiceImpl implements UserService {
 	public boolean verifyEmailToken(String token) {
 		boolean returnValue = false;
 		
-		// Find user by token
 		UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
+		
+		System.out.println(">>> userEntity: " + (userEntity != null ? userEntity.getEmail() : "NULL - token DB'de bulunamadı"));
 		
 		if (userEntity != null) {
 			boolean hastokenExpired = Utils.hasTokenExpired(token);
+			System.out.println(">>> hasTokenExpired: " + hastokenExpired);
+			
 			if (!hastokenExpired) {
 				userEntity.setEmailVerificationToken(null);
 				userEntity.setEmailVerificationStatus(Boolean.TRUE);
@@ -176,8 +163,8 @@ public class UserServiceImpl implements UserService {
 				returnValue = true;
 			}
 		}
+		
+		System.out.println(">>> returnValue: " + returnValue);
 		return returnValue;
 	}
-
-
 }
