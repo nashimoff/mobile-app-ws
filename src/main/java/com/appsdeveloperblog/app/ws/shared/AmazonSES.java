@@ -59,7 +59,7 @@ public class AmazonSES {
 
 	public void verifyEmail(UserDto userDto) {
 
-		// You can also set your keys this way.And it will work!
+		// You can also set  your keys this way.And it will work!
 		//System.setProperty("aws.accessKeyId", "<YOUR KEY ID HERE>"); 
 		//System.setProperty("aws.secretKey", "<SECRET KEY HERE>"); 
 		
