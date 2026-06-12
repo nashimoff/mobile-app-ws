@@ -13,6 +13,7 @@ import com.appsdeveloperblog.app.ws.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Component
@@ -67,7 +68,19 @@ public class Utils {
 		String token = Jwts.builder()
 				.setSubject(userId)
 				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-				.signWith(key)
+//				.signWith(SignatureAlgorithm.HS512,SecurityConstants.getTokenSecret())
+				.signWith(SignatureAlgorithm.HS384,SecurityConstants.getTokenSecret())
+				.compact();
+		return token;
+	}
+	
+	public String generatePasswordResetToken(String userId)
+	{
+		String token = Jwts.builder()
+				.setSubject(userId)
+				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+//				.signWith(SignatureAlgorithm.HS512,SecurityConstants.getTokenSecret())
+				.signWith(SignatureAlgorithm.HS384,SecurityConstants.getTokenSecret())
 				.compact();
 		return token;
 	}
