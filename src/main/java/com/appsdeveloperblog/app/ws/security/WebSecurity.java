@@ -49,6 +49,8 @@ public class WebSecurity {
 	.permitAll()
 	.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
 	.permitAll()
+	.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
+	.permitAll()
 //	.antMatchers("/error").permitAll()  // ← bunu ekle
 	.anyRequest().authenticated()
 	.and()
