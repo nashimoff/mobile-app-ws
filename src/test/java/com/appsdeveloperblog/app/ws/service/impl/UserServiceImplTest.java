@@ -36,7 +36,7 @@ class UserServiceImplTest {
 		
 		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
 		
-		userService.getUser("test@test.com");
+		userService.getUser("test@test.com"); //
 	}
 
 }
