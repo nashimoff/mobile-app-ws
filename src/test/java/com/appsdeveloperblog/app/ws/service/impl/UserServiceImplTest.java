@@ -1,5 +1,7 @@
 package com.appsdeveloperblog.app.ws.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -11,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
+import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
 
 class UserServiceImplTest {
 	
@@ -36,7 +39,11 @@ class UserServiceImplTest {
 		
 		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
 		
-		userService.getUser("test@test.com"); //
+		UserDto userDto = userService.getUser("test@test.com"); 
+		
+		assertNotNull(userDto);
+		assertEquals("Sergey", userDto.getFirstName());
+		
 	}
 
 }
