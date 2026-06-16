@@ -35,6 +35,8 @@ class UserServiceImplTest {
 		userEntity.setEncryptedPassword("74hghd8474jf");
 		
 		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+		
+		userService.getUser("test@test.com");
 	}
 
 }
