@@ -2,48 +2,106 @@ package com.appsdeveloperblog.app.ws.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
+import com.appsdeveloperblog.app.ws.shared.AmazonSES;
+import com.appsdeveloperblog.app.ws.shared.Utils;
+import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
 import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
 
 class UserServiceImplTest {
-	
-	@InjectMocks
-	UserServiceImpl userService;
-	
-	@Mock
-	UserRepository userRepository;
 
-	@BeforeEach
-	void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-	}
+    @InjectMocks
+    UserServiceImpl userService;
 
-	@Test
-	final void testGetUser() {
-		
-		UserEntity userEntity = new UserEntity();
-		userEntity.setId(1L);
-		userEntity.setFirstName("Sergey");
-		userEntity.setUserId("hhty57ehfy");
-		userEntity.setEncryptedPassword("74hghd8474jf");
-		
-		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
-		
-		UserDto userDto = userService.getUser("test@test.com"); 
-		
-		assertNotNull(userDto);
-		assertEquals("Sergey", userDto.getFirstName());
-		
-	}
+    @Mock
+    UserRepository userRepository;
 
+    @Mock
+    Utils utils;
+
+    @Mock
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Mock
+    AmazonSES amazonSES;
+
+    String userId = "hhty57ehfy";
+    String encryptedPassword = "74hghd8474jf";
+
+    UserEntity userEntity;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+
+        doNothing().when(amazonSES).verifyEmail(any(UserDto.class));
+
+        userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setFirstName("Sergey");
+        userEntity.setUserId(userId);
+        userEntity.setEncryptedPassword(encryptedPassword);
+        userEntity.setEmail("test@test.com");
+        userEntity.setEmailVerificationToken("7htnfhr758");
+    }
+
+    @Test
+    final void testGetUser() {
+        when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+
+        UserDto userDto = userService.getUser("test@test.com");
+
+        assertNotNull(userDto);
+        assertEquals("Sergey", userDto.getFirstName());
+    }
+
+    @Test
+    final void testGetUser_UsernameNotFoundException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(null);
+
+        assertThrows(UsernameNotFoundException.class,
+                () -> userService.getUser("test@test.com")
+        );
+    }
+
+    @Test
+    final void testCreateUser() {
+        when(userRepository.findByEmail(anyString())).thenReturn(null);
+        when(utils.generateAddressrId(anyInt())).thenReturn("hgfnghtyrir884");
+        when(utils.generateUserId(anyInt())).thenReturn(userId);
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        AddressDTO addressDto = new AddressDTO();
+        addressDto.setType("shipping");
+
+        List<AddressDTO> addresses = new ArrayList<>();
+        addresses.add(addressDto);
+
+        UserDto userDto = new UserDto();
+        userDto.setAddresses(addresses);
+
+        UserDto storedUserDetails = userService.createUser(userDto);
+        assertNotNull(storedUserDetails);
+        assertEquals(userEntity.getFirstName(), storedUserDetails.getFirstName());
+    }
 }
