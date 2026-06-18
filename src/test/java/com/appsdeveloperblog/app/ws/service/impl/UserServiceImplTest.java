@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Type;
@@ -90,7 +92,7 @@ class UserServiceImplTest {
 	@Test
 	final void testCreateUser() {
 		when(userRepository.findByEmail(anyString())).thenReturn(null);
-		when(utils.generateAddressrId(anyInt())).thenReturn("hgfnghtyrir884");
+		when(utils.generateAddressId(anyInt())).thenReturn("hgfnghtyrir884");
 		when(utils.generateUserId(anyInt())).thenReturn(userId);
 		when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
 		when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
@@ -108,6 +110,7 @@ class UserServiceImplTest {
 		assertEquals(userEntity.getLastName(), storedUserDetails.getLastName());
 		assertNotNull(storedUserDetails.getUserId());
 		assertEquals(storedUserDetails.getAddresses().size(), userEntity.getAddresses().size());
+		verify(utils,times(2)).generateAddressId(30);
 	}
 
 	private List<AddressDTO> getAddressesDto() {
