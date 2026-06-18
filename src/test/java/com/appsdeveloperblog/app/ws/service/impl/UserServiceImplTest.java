@@ -93,15 +93,32 @@ class UserServiceImplTest {
 
         AddressDTO addressDto = new AddressDTO();
         addressDto.setType("shipping");
+        addressDto.setCity("Vancouver");
+        addressDto.setCountry("Canada");
+        addressDto.setPostalCode("ABC123");
+        addressDto.setStreetName("123 Street name");
+        
+        AddressDTO billingAddressDto = new AddressDTO();
+        billingAddressDto.setType("billing");
+        billingAddressDto.setCity("Vancouver");
+        billingAddressDto.setCountry("Canada");
+        billingAddressDto.setPostalCode("ABC123");
+        billingAddressDto.setStreetName("123 Street name");
 
         List<AddressDTO> addresses = new ArrayList<>();
         addresses.add(addressDto);
+        addresses.add(billingAddressDto);
 
         UserDto userDto = new UserDto();
         userDto.setAddresses(addresses);
+        userDto.setFirstName("Sergey");
+        userDto.setLastName("Kargopolov");
+        userDto.setPassword("12345678");
+        userDto.setEmail("test@test.com");
 
         UserDto storedUserDetails = userService.createUser(userDto);
         assertNotNull(storedUserDetails);
         assertEquals(userEntity.getFirstName(), storedUserDetails.getFirstName());
+        assertEquals(userEntity.getLastName(), storedUserDetails.getLastName());
     }
 }
