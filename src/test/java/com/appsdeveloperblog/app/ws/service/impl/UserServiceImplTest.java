@@ -110,7 +110,9 @@ class UserServiceImplTest {
 		assertEquals(userEntity.getLastName(), storedUserDetails.getLastName());
 		assertNotNull(storedUserDetails.getUserId());
 		assertEquals(storedUserDetails.getAddresses().size(), userEntity.getAddresses().size());
-		verify(utils,times(2)).generateAddressId(30);
+		verify(utils,times(storedUserDetails.getAddresses().size())).generateAddressId(30);
+		verify(bCryptPasswordEncoder, times(1)).encode("12345678");
+		verify(userRepository,times(1)).save(any(UserEntity.class));
 	}
 
 	private List<AddressDTO> getAddressesDto() {
