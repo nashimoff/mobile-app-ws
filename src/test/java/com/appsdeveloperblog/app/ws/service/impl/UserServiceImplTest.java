@@ -26,6 +26,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
 import com.appsdeveloperblog.app.ws.io.entity.AddressEntity;
 import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
@@ -87,7 +88,24 @@ class UserServiceImplTest {
 	final void testGetUser_UsernameNotFoundException() {
 		when(userRepository.findByEmail(anyString())).thenReturn(null);
 
-		assertThrows(UsernameNotFoundException.class, () -> userService.getUser("test@test.com"));
+		assertThrows(UsernameNotFoundException.class, () -> {
+			userService.getUser("test@test.com");
+		});
+	}
+
+	@Test
+	final void testCreateUser_CreateUserServiceException() {
+		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+		UserDto userDto = new UserDto();
+		userDto.setAddresses(getAddressesDto());
+		userDto.setFirstName("Sergey");
+		userDto.setLastName("Kargopolov");
+		userDto.setPassword("12345678");
+		userDto.setEmail("test@test.com");
+
+		assertThrows(UserServiceException.class, () -> {
+			userService.createUser(userDto);
+		});
 	}
 
 	@Test
@@ -112,9 +130,9 @@ class UserServiceImplTest {
 		assertEquals(userEntity.getLastName(), storedUserDetails.getLastName());
 		assertNotNull(storedUserDetails.getUserId());
 		assertEquals(storedUserDetails.getAddresses().size(), userEntity.getAddresses().size());
-		verify(utils,times(storedUserDetails.getAddresses().size())).generateAddressId(30);
+		verify(utils, times(storedUserDetails.getAddresses().size())).generateAddressId(30);
 		verify(bCryptPasswordEncoder, times(1)).encode("12345678");
-		verify(userRepository,times(1)).save(any(UserEntity.class));
+		verify(userRepository, times(1)).save(any(UserEntity.class));
 	}
 
 	private List<AddressDTO> getAddressesDto() {
@@ -138,13 +156,13 @@ class UserServiceImplTest {
 
 		return addresses;
 	}
-	
-	private List<AddressEntity> getAddressesEntity()
-	{
+
+	private List<AddressEntity> getAddressesEntity() {
 		List<AddressDTO> addresses = getAddressesDto();
-		
-		Type listType = new TypeToken<List<AddressEntity>>() {}.getType();
-		
+
+		Type listType = new TypeToken<List<AddressEntity>>() {
+		}.getType();
+
 		return new ModelMapper().map(addresses, listType);
 	}
 }
