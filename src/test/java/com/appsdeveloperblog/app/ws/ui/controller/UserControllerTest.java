@@ -1,5 +1,8 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import com.appsdeveloperblog.app.ws.service.impl.UserServiceImpl;
 import com.appsdeveloperblog.app.ws.shared.dto.AddressDTO;
 import com.appsdeveloperblog.app.ws.shared.dto.UserDto;
+import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
 
 class UserControllerTest {
 
@@ -47,6 +51,14 @@ class UserControllerTest {
 	@Test
 	void testGetUser() {
 		when(userService.getUserByUserId(anyString())).thenReturn(userDto);
+		
+		UserRest userRest = userController.getUser(USER_ID);
+		
+		assertNotNull(userRest);
+		assertEquals(USER_ID, userRest.getUserId());
+		assertEquals(userDto.getFirstName(), userRest.getFirstName());
+		assertEquals(userDto.getLastName(), userRest.getLastName());
+		assertTrue(userDto.getAddresses().size() == userRest.getAddresses().size());
 	}
 	
 	private List<AddressDTO> getAddressesDto() {
