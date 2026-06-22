@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 
-        amazonSES.verifyEmail(returnValue); // ← new AmazonSES() yerine
+//        amazonSES.verifyEmail(returnValue); // ← new AmazonSES() yerine
 
         return returnValue;
     }

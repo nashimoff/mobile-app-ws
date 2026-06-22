@@ -17,9 +17,10 @@ public class SecurityConstants {
 //	public static final String TOKEN_SECRET="k9m2xv7bq0n5r8t1s6d3f4g7h2j9k8l0p5w1e6r3t9y2u7i4o8a5s1d6f3g0h9j2"; // later will be explained
 
 	public static String getTokenSecret() {
-		Environment environment = (Environment) SpringApplicationContext.getBean("environment");
-		return environment.getProperty("tokenSecret");
+//		Environment environment = (Environment) SpringApplicationContext.getBean("environment");
+//		return environment.getProperty("tokenSecret");
 //		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");
-//		return appProperties.getTokenSecret();
+		 AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("appProperties"); // küçük 'a'
+		return appProperties.getTokenSecret();
 	}
 }
