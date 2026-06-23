@@ -1,5 +1,4 @@
 package com.appsdeveloperblog.app.ws.security;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,9 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import com.appsdeveloperblog.app.ws.service.UserService;
-
 @EnableWebSecurity
 public class WebSecurity {
 	
@@ -26,7 +23,6 @@ public class WebSecurity {
 	@Bean
 	protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
 	
-	// Configure AuthenticationManagerBuilder
 	AuthenticationManagerBuilder authenticationManagerBuilder = 	
 			http.getSharedObject(AuthenticationManagerBuilder.class);
 	
@@ -36,7 +32,6 @@ public class WebSecurity {
 	
 	AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 	
-	// Customize Login URL path
 	AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager);
 	authenticationFilter.setFilterProcessesUrl("/users/login");
 	
@@ -51,8 +46,15 @@ public class WebSecurity {
 	.permitAll()
 	.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
 	.permitAll()
-//	.antMatchers("/error").permitAll()  // ← bunu ekle
+	
+	.antMatchers(SecurityConstants.H2_CONSOLE)
+	.permitAll()
+	
+	.antMatchers("/h2-console/**")
+	.permitAll()
 	.anyRequest().authenticated()
+	.and()
+	.headers().frameOptions().disable()
 	.and()
 	.authenticationManager(authenticationManager)
 	.addFilter(authenticationFilter)
@@ -60,10 +62,10 @@ public class WebSecurity {
 	.sessionManagement()
 	.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	
+//	.headers().frameOptions().disable(); yukarida var zaten
+	
 	return http.build();
 	
 }
 	
 }
-	
-	
