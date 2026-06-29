@@ -125,9 +125,25 @@ public class UserServiceImpl implements UserService {
         return returnValue;
     }
 
+//    @Override
+//    public UserDto updateUser(String userId, UserDto user) {
+//        UserDto returnValue = new UserDto();
+//        UserEntity userEntity = userRepository.findByUserId(userId);
+//        if (userEntity == null)
+//            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+//
+//        userEntity.setFirstName(user.getFirstName());
+//        userEntity.setLastName(user.getLastName());
+//
+//        UserEntity updatedUserDetails = userRepository.save(userEntity);
+//
+//        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+//       
+//        return returnValue;
+//    }
+    
     @Override
     public UserDto updateUser(String userId, UserDto user) {
-        UserDto returnValue = new UserDto();
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null)
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
@@ -137,7 +153,8 @@ public class UserServiceImpl implements UserService {
 
         UserEntity updatedUserDetails = userRepository.save(userEntity);
 
-        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+        ModelMapper modelMapper = new ModelMapper();
+        UserDto returnValue = modelMapper.map(updatedUserDetails, UserDto.class);
 
         return returnValue;
     }
