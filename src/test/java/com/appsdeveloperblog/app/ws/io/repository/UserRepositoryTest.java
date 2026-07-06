@@ -2,10 +2,8 @@ package com.appsdeveloperblog.app.ws.io.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import com.appsdeveloperblog.app.ws.io.entity.AddressEntity;
 import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
 
@@ -26,9 +23,38 @@ class UserRepositoryTest {
 	@Autowired
 	UserRepository userRepository;
 
+	static boolean recordsCreated = false;
+	
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() throws Exception {		
+		if(!recordsCreated) createRecords(); 
+	}
+
+	@Test
+	final void testGetVerifiedUsers() {
+		Pageable pageableRequest = PageRequest.of(1,1);
+		Page<UserEntity>page = userRepository.findAllUsersWithConfirmedEmailAddress(pageableRequest);
+		assertNotNull(page);
 		
+		List<UserEntity> userEntities = page.getContent();
+		assertNotNull(userEntities);
+		assertTrue(userEntities.size() == 1);
+	}
+	
+	@Test
+	final void testFindUserByFirstName()
+	{
+		String firstName="Sergey";
+		List<UserEntity> users = userRepository.findUserByFirstName(firstName);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+		
+		UserEntity user = users.get(0);
+		assertTrue(user.getFirstName().equals(firstName));
+	}
+	
+	private void createRecords()
+	{
 //		Prepare User Entity
 		UserEntity userEntity = new UserEntity();
 		userEntity.setFirstName("Sergey");
@@ -80,31 +106,8 @@ class UserRepositoryTest {
 		
 		userRepository.save(userEntity2);
 		
-		
-	}
+		recordsCreated = true;
 
-	@Test
-	final void testGetVerifiedUsers() {
-		Pageable pageableRequest = PageRequest.of(1,1);
-		Page<UserEntity>page = userRepository.findAllUsersWithConfirmedEmailAddress(pageableRequest);
-		assertNotNull(page);
-		
-		List<UserEntity> userEntities = page.getContent();
-		assertNotNull(userEntities);
-		assertTrue(userEntities.size() == 1);
-		
-	}
-	
-	@Test
-	final void testFindUserByFirstName()
-	{
-		String firstName="Sergey";
-		List<UserEntity> users = userRepository.findUserByFirstName(firstName);
-		assertNotNull(users);
-		assertTrue(users.size() == 2);
-		
-		UserEntity user = users.get(0);
-		assertTrue(user.getFirstName().equals(firstName));
 	}
 
 }
