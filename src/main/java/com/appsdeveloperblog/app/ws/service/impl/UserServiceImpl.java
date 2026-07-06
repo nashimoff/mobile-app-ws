@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Autowired
-    AmazonSES amazonSES; // ← new AmazonSES() yerine inject et
+    AmazonSES amazonSES;
 
     @Override
     public UserDto createUser(UserDto user) {
@@ -71,8 +71,6 @@ public class UserServiceImpl implements UserService {
 
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 
-//        amazonSES.verifyEmail(returnValue); // ← new AmazonSES() yerine
-
         return returnValue;
     }
 
@@ -99,19 +97,6 @@ public class UserServiceImpl implements UserService {
                 true, new ArrayList<>());
     }
 
-//    @Override
-//    public UserDto getUserByUserId(String userId) {
-//        UserDto returnValue = new UserDto();
-//        UserEntity userEntity = userRepository.findByUserId(userId);
-//
-//        if (userEntity == null)
-//            throw new UsernameNotFoundException("User with ID: " + userId + " not found");
-//
-//        BeanUtils.copyProperties(userEntity, returnValue);
-//
-//        return returnValue;
-//    }
-    
     @Override
     public UserDto getUserByUserId(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -125,23 +110,7 @@ public class UserServiceImpl implements UserService {
         return returnValue;
     }
 
-//    @Override
-//    public UserDto updateUser(String userId, UserDto user) {
-//        UserDto returnValue = new UserDto();
-//        UserEntity userEntity = userRepository.findByUserId(userId);
-//        if (userEntity == null)
-//            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
-//
-//        userEntity.setFirstName(user.getFirstName());
-//        userEntity.setLastName(user.getLastName());
-//
-//        UserEntity updatedUserDetails = userRepository.save(userEntity);
-//
-//        BeanUtils.copyProperties(updatedUserDetails, returnValue);
-//       
-//        return returnValue;
-//    }
-    
+    // ==== DÜZELTİLEN METOD ====
     @Override
     public UserDto updateUser(String userId, UserDto user) {
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -151,13 +120,16 @@ public class UserServiceImpl implements UserService {
         userEntity.setFirstName(user.getFirstName());
         userEntity.setLastName(user.getLastName());
 
-        UserEntity updatedUserDetails = userRepository.save(userEntity);
+        userRepository.save(userEntity);
 
+        // save()'in döndürdüğü değeri değil, addresses'i zaten yüklü olan
+        // userEntity referansını map ediyoruz.
         ModelMapper modelMapper = new ModelMapper();
-        UserDto returnValue = modelMapper.map(updatedUserDetails, UserDto.class);
+        UserDto returnValue = modelMapper.map(userEntity, UserDto.class);
 
         return returnValue;
     }
+    // ==========================
 
     @Override
     public void deleteUser(String userId) {
@@ -194,11 +166,8 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
 
-        System.out.println(">>> userEntity: " + (userEntity != null ? userEntity.getEmail() : "NULL - token DB'de bulunamadı"));
-
         if (userEntity != null) {
             boolean hastokenExpired = Utils.hasTokenExpired(token);
-            System.out.println(">>> hasTokenExpired: " + hastokenExpired);
 
             if (!hastokenExpired) {
                 userEntity.setEmailVerificationToken(null);
@@ -208,7 +177,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        System.out.println(">>> returnValue: " + returnValue);
         return returnValue;
     }
 
@@ -222,14 +190,14 @@ public class UserServiceImpl implements UserService {
             return returnValue;
         }
 
-        String token = utils.generatePasswordResetToken(userEntity.getUserId()); // ← new Utils() yerine inject edileni kullan
+        String token = utils.generatePasswordResetToken(userEntity.getUserId());
 
         PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
         passwordResetTokenEntity.setToken(token);
         passwordResetTokenEntity.setUserDetails(userEntity);
         passwordResetTokenRepository.save(passwordResetTokenEntity);
 
-        returnValue = amazonSES.sendPasswordResetRequest( // ← new AmazonSES() yerine
+        returnValue = amazonSES.sendPasswordResetRequest(
                 userEntity.getFirstName(),
                 userEntity.getEmail(),
                 token);
