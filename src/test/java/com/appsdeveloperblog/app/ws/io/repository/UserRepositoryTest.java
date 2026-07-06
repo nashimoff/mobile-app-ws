@@ -2,21 +2,22 @@ package com.appsdeveloperblog.app.ws.io.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.appsdeveloperblog.app.ws.io.entity.AddressEntity;
 import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -99,6 +100,11 @@ class UserRepositoryTest {
 	{
 		String firstName="Sergey";
 		List<UserEntity> users = userRepository.findUserByFirstName(firstName);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+		
+		UserEntity user = users.get(0);
+		assertTrue(user.getFirstName().equals(firstName));
 	}
 
 }
