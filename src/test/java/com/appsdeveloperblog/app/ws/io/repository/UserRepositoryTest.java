@@ -2,10 +2,8 @@ package com.appsdeveloperblog.app.ws.io.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -94,6 +92,13 @@ class UserRepositoryTest {
 		assertNotNull(userEntities);
 		assertTrue(userEntities.size() == 1);
 		
+	}
+	
+	@Test
+	final void testFindUserByFirstName()
+	{
+		String firstName="Sergey";
+		List<UserEntity> users = userRepository.findUserByFirstName(firstName);
 	}
 
 }
