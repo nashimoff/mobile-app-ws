@@ -54,7 +54,7 @@ class UserRepositoryTest {
 	}
 	
 	@Test
-	final void testFindUserByFirstName()
+	final void testFindUserByLastName()
 	{
 		String firstName="Sergey";
 		List<UserEntity> users = userRepository.findUserByFirstName(firstName);
