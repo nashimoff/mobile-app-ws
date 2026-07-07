@@ -2,6 +2,8 @@ package com.appsdeveloperblog.app.ws.io.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +66,44 @@ class UserRepositoryTest {
 		UserEntity user = users.get(0);
 		assertTrue(user.getLastName().equals(lastName));
 	}
+	
+	@Test
+	final void findUsersByKeyword()
+	{
+		String keyword="erg";
+		List<UserEntity> users = userRepository.findUsersByKeyword(keyword);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+		
+		UserEntity user = users.get(0);
+		assertTrue(
+				user.getLastName().contains(keyword) ||
+				user.getFirstName().contains(keyword)
+				);
+	}
+	
+	@Test
+	final void testFindUserFirstNameAndLastNameByKeyword()
+	{
+		String keyword="erg";
+		List<Object[]> users = userRepository.findUserFirstNameAndLastNameByKeyword(keyword);
+		assertNotNull(users);
+		assertTrue(users.size() == 2);
+		
+		Object[] user = users.get(0);
+		
+		assertTrue(user.length == 2);
+		
+		String userFirstName = String.valueOf(user[0]);
+		String userLastName = String.valueOf(user[1]);
+		
+		assertNotNull(userFirstName);
+		assertNotNull(userLastName);
+		
+		System.out.println("First name = " + userFirstName);
+		System.out.println("Last name = " + userLastName);
+	}
+	
 	
 	private void createRecords()
 	{
