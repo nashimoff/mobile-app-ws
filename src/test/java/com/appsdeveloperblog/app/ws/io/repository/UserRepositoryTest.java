@@ -118,6 +118,13 @@ class UserRepositoryTest {
 		assertTrue(storedEmailVerificationStatus == newEmailVerificationStatus);
 	}
 	
+	@Test 
+	final void testFindUserEntityByUserId()
+	{
+		String userId = "1a2b3c";
+		userRepository.findUserEntityByUserId(userId);
+	}
+	
 	
 	private void createRecords()
 	{
