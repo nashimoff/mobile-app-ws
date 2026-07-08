@@ -122,7 +122,10 @@ class UserRepositoryTest {
 	final void testFindUserEntityByUserId()
 	{
 		String userId = "1a2b3c";
-		userRepository.findUserEntityByUserId(userId);
+		UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
+		
+		assertNotNull(userEntity);
+		assertTrue(userEntity.getUserId().equals(userId));
 	}
 	
 	
