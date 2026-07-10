@@ -55,8 +55,7 @@ public class WebSecurity {
 	
 	.antMatchers(SecurityConstants.H2_CONSOLE)
 	.permitAll()
-	
-	.antMatchers("/h2-console/**")
+	.antMatchers("/v2/api-docs","/configuration/**", "/swagger*/**", "/webjars/**","/h2-console/**")
 	.permitAll()
 	.anyRequest().authenticated()
 	.and()
