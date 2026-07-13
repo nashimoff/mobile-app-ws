@@ -50,7 +50,4 @@ public class AuthorityEntity implements Serializable {
 	public void setRoles(Collection<RoleEntity> roles) {
 		this.roles = roles;
 	}
-	
-	
-
 }
