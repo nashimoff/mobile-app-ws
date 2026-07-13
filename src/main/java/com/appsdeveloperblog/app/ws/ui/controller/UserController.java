@@ -37,6 +37,7 @@ import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/users") //http://localhost:8080/users
@@ -51,7 +52,9 @@ public class UserController {
 
 	@Autowired
 	AddressService addressesService;
-
+	
+	@ApiOperation(value="The Get User Details Web Service Endpoint",
+			notes="${userController.GetUser.ApiOperation.Notes}")
 	@GetMapping(path="/{id}", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE})
 	public UserRest getUser(@PathVariable String id)

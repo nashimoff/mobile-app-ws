@@ -1,6 +1,8 @@
 package com.appsdeveloperblog.app.ws;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -39,7 +41,10 @@ public class SwaggerConfig {
 	@Bean
 	public Docket apiDocket() {
 
-		Docket docket = new Docket(DocumentationType.SWAGGER_2).select()
+		Docket docket = new Docket(DocumentationType.SWAGGER_2)
+				.protocols(new HashSet<>(Arrays.asList("HTTP","HTTPs")))
+				.apiInfo(apiInfo)
+				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.appsdeveloperblog.app.ws")).paths(PathSelectors.any())
 				.build();
 
