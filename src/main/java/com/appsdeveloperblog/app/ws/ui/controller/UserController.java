@@ -1,6 +1,6 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
-import java.util.ArrayList; //////nurlan
+import java.util.ArrayList; //////nurlana
 import java.util.Arrays;
 import java.util.List;
 
