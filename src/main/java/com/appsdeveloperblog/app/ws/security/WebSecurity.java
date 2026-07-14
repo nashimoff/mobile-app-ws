@@ -19,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
 import com.appsdeveloperblog.app.ws.service.UserService;
 
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(securedEnabled=true)
 @EnableWebSecurity
 public class WebSecurity {  ////
 
