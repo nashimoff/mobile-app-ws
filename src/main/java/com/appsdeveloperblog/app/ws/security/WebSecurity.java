@@ -58,7 +58,7 @@ public class WebSecurity {
 				.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL).permitAll()
 				.antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
 				.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/h2-console/**").permitAll()
-				.antMatchers(HttpMethod.DELETE, "/users/**")
+				.antMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN","SUPER_ADMIN")
 				.anyRequest().authenticated()
 			.and()
 			.headers().frameOptions().disable()
