@@ -21,7 +21,7 @@ import com.appsdeveloperblog.app.ws.service.UserService;
 
 @EnableGlobalMethodSecurity
 @EnableWebSecurity
-public class WebSecurity {
+public class WebSecurity {  //
 
 	private final UserService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
