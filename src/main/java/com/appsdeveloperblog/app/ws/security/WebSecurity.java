@@ -19,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
 import com.appsdeveloperblog.app.ws.service.UserService;
 
-@EnableGlobalMethodSecurity(securedEnabled=true)
+@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
 @EnableWebSecurity
 public class WebSecurity {  ////
 
@@ -60,7 +60,7 @@ public class WebSecurity {  ////
 				.antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL).permitAll()
 				.antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
 				.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/h2-console/**").permitAll()
-				.antMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN","SUPER_ADMIN")
+//				.antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 			.and()
 			.headers().frameOptions().disable()

@@ -16,6 +16,7 @@ import com.appsdeveloperblog.app.ws.io.entity.UserEntity;
 import com.appsdeveloperblog.app.ws.io.repository.AuthorityRepository;
 import com.appsdeveloperblog.app.ws.io.repository.RoleRepository;
 import com.appsdeveloperblog.app.ws.io.repository.UserRepository;
+import com.appsdeveloperblog.app.ws.shared.Roles;
 import com.appsdeveloperblog.app.ws.shared.Utils;
 
 @Component
@@ -45,8 +46,8 @@ public class InitialUserSetup {
 		AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
 		AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
 
-		RoleEntity roleUser = createRole("ROLE_USER", Arrays.asList(readAuthority, writeAuthority));
-		RoleEntity roleAdmin = createRole("ROLE_ADMIN", Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
+		createRole(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
+		RoleEntity roleAdmin = createRole(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
 		if (roleAdmin == null) return;
 
@@ -60,7 +61,7 @@ public class InitialUserSetup {
 		UserEntity adminUser = new UserEntity();
 		adminUser.setFirstName("Sergey");
 		adminUser.setLastName("Kargopolov");
-		adminUser.setEmail("test@test.com");
+		adminUser.setEmail("admin@test.com");
 		adminUser.setEmailVerificationStatus(true);
 		adminUser.setUserId(utils.generateUserId(30));
 		adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("12345678"));
